@@ -18,12 +18,6 @@
     $stmt->execute();
     $distribs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $sql = 'SELECT * FROM film';
-    $stmt = $bdd->prepare($sql);
-    $stmt->execute();
-    $table_films = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-
     include('test.php');
     
 ?>
@@ -38,54 +32,53 @@
 </head>
 <body>
 
-    <section>
-        <h1>Rechercher un film</h1>
-        <h2>Par nom</h2>
-        <form method="POST" action="my_cinema2.php">
-            <input type="text" name="nom" placeholder="Titre de film">  
-        
-        <h2>Par type ou distributeur</h2>
+    <div class="container">
+        <h1 class="text-dark text-center">Rechercher un film</h1>
+        <nav class="navbar-dark bg-dark mt-3 mb-3 p-3">
+            <form method="POST" action="my_cinema2.php" class="form-inline">
+                <input type="text" name="nom" placeholder="Titre de film" class="form-control m-2">  
 
-            <select name="genre" id="genre">
-                <option value="">Sélectionnez un genre</option>
-                <?php foreach($genres as $genre): ?>
-                <option value="<?= $genre['id_genre']; ?>"> <?= $genre['nom']; ?></option>
+                <select name="genre" id="genre" class="custom-select" m-2>
+                    <option value="">Sélectionnez un genre</option>
+                    <?php foreach($genres as $genre): ?>
+                    <option value="<?= $genre['id_genre']; ?>"> <?= $genre['nom']; ?></option>
+                    <?php endforeach; ?>
+                </select>
+                
+                <select name="distribution" id="distrib" class="custom-select m-2">
+                <option value="">Sélectionnez un distributeur</option>
+                <?php foreach($distribs as $distrib): ?>
+                    <option value="<?= $distrib['id_distrib']; ?>"> <?= $distrib['nom']; ?></option>
                 <?php endforeach; ?>
-            </select>
-            
-            <select name="distribution" id="distrib">
-            <option value="">Sélectionnez un distributeur</option>
-            <?php foreach($distribs as $distrib): ?>
-                <option value="<?= $distrib['id_distrib']; ?>"> <?= $distrib['nom']; ?></option>
-            <?php endforeach; ?>
-            </select>
-            <input type="submit" value="Rechercher"> 
+                </select>
 
-        <table class="table">
+                <input type="submit" value="Rechercher" class="btn btn-light m-2"> 
+            </form>
+        </nav>
+        <table class="table table-dark">
         <thead>
             <tr>
             <th scope="col">Titre</th>
             <th scope="col">Genre</th>
             <th scope="col">Synopsis</th>
             <th scope="col">Durée</th>
-            <th scope="col">Date</th>
+            <th scope="col">Jusqu'au</th>
+            <th scope="col">Distributeur</th>
             </tr>
         </thead>
         <tbody>
-            <tr>
             <?php foreach($films as $film): ?>
+            <tr>
             <td><?= $film["titre"]?></td>
-            <td><?= $film["nom"]?></td>
-            <?php foreach($table_films as $columns): ?>
-            <td><?= $columns["resum"]?></td>
+            <td><?= $film["nom_genre"]?></td>
+            <td><?= $film["resum"]?></td>
+            <td><?= $film["duree_min"]?> mins</td>
+            <td><?= $film["date_fin_affiche"]?></td>
+            <td><?= $film["nom_distrib"]?></td>
             </tr>
+            <?php endforeach; ?>
         </tbody>
-
-            <?php endforeach; ?>
-            <?php endforeach; ?>
-           
-        </form> 
-    </section>
+    </div>
 
 </body>
 </html>

@@ -62,3 +62,32 @@
         'date' => $_POST['date']
         ));
     }
+
+    if(isset($_POST['num_client']) && isset($_POST['id_abo']) && !empty($_POST['num_client']) && !empty($_POST['id_abo'])){
+        $add_abo_query = "UPDATE membre SET id_abo = :id_abo WHERE id_membre = :num_client";
+        $stmt = $bdd->prepare($add_abo_query);
+        $stmt->execute(array(
+            'id_abo' => $_POST['id_abo'],
+            'num_client' => $_POST['num_client']
+        ));
+        if($_POST['id_abo'] == "NULL"){
+            $delete_abo_query = "UPDATE membre SET id_abo = NULL WHERE id_membre = :num_client";
+            $stmt = $bdd->prepare($delete_abo_query);
+            $stmt->execute(array(
+                'num_client' => $_POST['num_client']
+            ));
+        }
+    }
+
+    $stmt = $bdd->prepare('ALTER TABLE historique_membre ADD avis VARCHAR(255)');
+    $stmt->execute();
+
+    if(isset($_POST['avis']) && isset($_POST['movies']) && !empty($_POST['avis']) && !empty($_POST['movies'])){
+        $add_opinion_query = "UPDATE historique_membre SET avis = :avis WHERE id_film = :movie AND id_membre = :n_client";
+        $stmt = $bdd->prepare($add_opinion_query);
+        $stmt->execute(array(
+            'avis' => $_POST['avis'],
+            'movie' => $_POST['movies'],
+            'n_client' => $_POST['n_client']
+        ));
+    }

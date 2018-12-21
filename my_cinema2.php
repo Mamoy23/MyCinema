@@ -23,6 +23,11 @@
     $stmt->execute();
     $films = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+    $sql = 'SELECT * FROM abonnement ORDER BY nom ASC';
+    $stmt = $bdd->prepare($sql);
+    $stmt->execute();
+    $list_abos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
     include('test.php');
 ?>
 <!DOCTYPE html>
@@ -89,7 +94,7 @@
         <h1 class="text-primary m-2">Rechercher un client</h1>
 
         <form method="POST" action="my_cinema2.php" class="form-inline">
-            <input type="text" name="client" placeholder="Nom et/ou prénom" class="form-control m-2">
+            <input type="text" name="client" placeholder="Nom ou prénom" class="form-control m-2">
             <input type="submit" value="Rechercher" class="btn btn-primary m-2">
         </form>
 
@@ -123,7 +128,7 @@
         <h1 class="text-danger m-2">Abonnements</h1>
 
         <form method="POST" action="my_cinema2.php" class="form-inline">
-            <input type="text" name="abos" placeholder="Nom et/ou prénom" class="form-control m-2">
+            <input type="text" name="abos" placeholder="Nom ou prénom" class="form-control m-2">
             <input type="submit" value="Rechercher" class="btn btn-danger m-2">
         </form>
 
@@ -160,11 +165,17 @@
             </tbody>
         </table>
 
-        <h3 class="text-danger m-1">Ajouter un abonnement</h3>
+        <h3 class="text-danger m-1">Mettre à jour l'abonnement</h3>
         <form method="POST" action="my_cinema2.php">
-            <input type="text" name="id_membre" placeholder="N° client" class="form-control m-2">
-
-            <input type="submit" value="Ajouter" class="btn btn-danger btn-sm m-2">
+            <input type="text" name="num_client" placeholder="N° client" class="form-control m-2 border-danger">
+            <select name="id_abo" id="distrib" class="custom-select m-2 border-danger">
+                <option value="">Faites votre choix ici</option>
+                <?php foreach($list_abos as $abo): ?>
+                <option value="<?= $abo['id_abo']; ?>"> Ajouter l'abonnement <?= $abo['nom']; ?></option>
+                <?php endforeach; ?>
+                <option value="NULL">Supprimer l'abonnement</option>
+                </select>
+            <input type="submit" value="Valider" class="btn btn-danger btn-sm m-2">
         </form>
 
         <h1 class="text-success m-2">Historique client</h1>
@@ -179,6 +190,7 @@
                 <th scope="col">Film</th>
                 <th scope="col">Vu le</th>
                 <th scope="col">Synopsis</th>
+                <th scope="col">Avis</th>
             </tr>
             </thead>
             <tbody>
@@ -189,6 +201,7 @@
                     <td><?= $film['titre'] ?></td>
                     <td><?= $film['date'] ?></td>
                     <td><?= $film['resum']?></td>
+                    <td><?= $film['avis'] ?></td>
                 </tr>
                 <?php endforeach; ?>
                 <?php endif; ?>
@@ -197,18 +210,32 @@
         <h3 class="text-success m-1">Ajouter un film à l'historique</h3>
 
         <form method="POST" action="my_cinema2.php">
-            <input type="text" name="id_membre" placeholder="N° client" class="form-control m-2">
+            <input type="text" name="id_membre" placeholder="N° client" class="form-control m-2 border-success">
 
-            <select name="id_film" id="films"class="custom-select m-2">
+            <select name="id_film" id="films"class="custom-select m-2 border-success">
                 <option value="">Sélectionnez un film</option>
                 <?php foreach($films as $film): ?>
                 <option value="<?= $film['id_film']; ?>"> <?= $film['titre']; ?></option>
                 <?php endforeach; ?>
             </select>
-            <label for="date">Date</label>
-            <input type="date" id="date" name="date" value="2018-12-22" min="2018-01-01" max="2019-12-31">
+            <label for="date" class="text-muted">Date</label>
+            <input type="date" id="date" name="date" value="2018-12-22" min="2018-01-01" max="2019-12-31" class="border-success">
 
             <input type="submit" value="Ajouter" class="btn btn-success btn-sm m-2">
+        </form>
+
+        <h1 class="text-warning m-2">Avis client</h1>
+
+        <form method="POST" action="my_cinema2.php">
+            <input type="text" name="n_client" placeholder="N° client" class="form-control m-2 border-warning">
+            <textarea name="avis" cols="50" rows="5" placeholder="Rédiger l'avis ici..." class="form-control m-2 border-warning"></textarea>
+            <select name="movies" class="custom-select m-2 border-warning">
+                <option value="">Sélectionnez un film</option>
+                <?php foreach($films as $film): ?>
+                <option value="<?= $film['id_film']; ?>"> <?= $film['titre']; ?></option>
+                <?php endforeach; ?>
+            </select>
+            <input type="submit" value="Ajouter" class="btn btn-warning btn-sm m-2">
         </form>
     </div>
 </body>

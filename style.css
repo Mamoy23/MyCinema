@@ -1,0 +1,26 @@
+nav{
+    font-size: 25px;
+    font-family: 'Lobster', cursive;
+}
+.main-title{
+    font-size: 90px;
+}
+.bg{
+    background-color: rgb(243, 243, 243);
+}
+.bord{
+    padding: 20px;
+    margin: 40px;
+}
+.lobster{
+    font-family: 'Lobster', cursive;
+}
+.fas fa-video{
+    color: white;
+}
+img{
+    width: 250px;
+    display: block;
+    margin: auto;
+    padding: 40px;
+}
